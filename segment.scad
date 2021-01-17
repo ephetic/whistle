@@ -22,6 +22,7 @@ module coupler(inner, outer, top){
 
 
 module segment(inner, outer, length) {
+  length = length + 2 * coupler_height();
   difference() {
     pipe(inner, outer, length);
     coupler(inner, outer, false);
@@ -29,12 +30,20 @@ module segment(inner, outer, length) {
   }
 }
 
-module end_segment(inner, outer, length) {
+module first_segment(inner, outer, length) {
+  length = length + coupler_height();
   difference() {
     pipe(inner, outer, length);
-    coupler(inner, outer, false);
-    // translate([0,0,length]) coupler(inner, outer, true);
+    translate([0,0,length]) coupler(inner, outer, true);
   }
 }
 
-segment(8,10,20);
+module last_segment(inner, outer, length) {
+  length = length + coupler_height();
+  difference() {
+    pipe(inner, outer, length);
+    coupler(inner, outer, false);
+  }
+}
+
+segment(8,10,16);

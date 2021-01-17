@@ -41,15 +41,17 @@ angle = 90-20;
 
 // todo
 // deepen windway/chin --- lip_radius is dependent on windway height
-// re-parameterize accounting for couplers
+c = coupler_height();
 
-translate([0, 0, f_len + w_len + w_sz + 12])
-  end_segment(inner, outer, p_len);
+translate([-outer-3,0,0]){
+  translate([0, 0, f_len + w_len + w_sz + 5*c + 3])
+    last_segment(inner, outer, p_len);
 
-translate([0, 0, w_len + w_sz + 8])
-  fipple(inner, outer, f_len, w, lip_angle);
+  translate([0, 0, w_len + w_sz + 3*c  + 2])
+    fipple(inner, outer, f_len, w, lip_angle);
 
-translate([0, 0, w_len + 2])
-  window(inner, outer, w_sz, w);
+  translate([0, 0, w_len + c + 1])
+    window(inner, outer, w_sz, w);
 
-mouthpiece(inner, outer, w_len, w);
+  mouthpiece(inner, outer, w_len, w);
+}

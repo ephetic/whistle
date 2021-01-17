@@ -1,31 +1,14 @@
-use <segment.scad>;
 use <arc.scad>;
+use <mouthpiece.scad>;
+use <segment.scad>;
 
-function lip_radius(inner, width) = sqrt(pow(inner,2) - pow(width/2,2));
-  /*
-    / \    |
-  r/   \   | h
-  /__w__\  |
+function lip_radius (inner, width, height) = inset(inner, width, height) + height/2;
+function lip_height (inner, outer, width, angle, height) = tan(angle) * (outer - inset(inner, width, height) - height/2);
 
-  s = (r+r+w)/2 = r + w/2
-  A = sqrt(s(s-r)(s-r)(s-w))
-    = sqrt( s (s-r)^2 (s-w) )
-    = sqrt( (r+w/2) (r+w/2-r)^2 (r+w/2-w) )
-    = sqrt( (r+w/2) (w/2)^2 (r-w/2) )
-    = sqrt( (r^2 - (w/2)^2) (w/2)^2 )
-    = (w/2) sqrt(r^2 - (w/2)^2)
-  A = wh/2
-  h = 2A/w
-    = 2/w (w/2) sqrt(r^2 - (w/2)^2)
-    = sqrt(r^2 - (w/2)^2)
-  */
-
-function lip_height (inner, outer, width, angle) = tan(angle) * (outer - lip_radius(inner, width));
-
-module lip(inner, outer, width, angle) {
+module lip(inner, outer, width, angle, height) {
   w2 = width/2;
-  r = lip_radius(inner, width);
-  h = lip_height(inner, outer, width, angle);
+  r = lip_radius(inner, width, height);
+  h = lip_height(inner, outer, width, angle, height);
   points = [
     [-w2,r,0],
     [w2,r,0],
@@ -50,37 +33,43 @@ module cheek(inner, outer, width) {
   arc(inner, outer, coupler_height(), 90-angle-delta, 90+angle+delta);
 }
 
-module chin(inner, outer, length, width, angle) {
-  r = lip_radius(inner, width);
-  bottom_offset = max(coupler_height(), lip_height(inner, outer, width, angle));
-  top_offset = length - coupler_height();
+module chin(inner, outer, length, width, angle, height) {
+  r = lip_radius(inner, width, height);
+  bottom_offset = max(coupler_height(), lip_height(inner, outer, width, angle, height));
+  top_offset = length + coupler_height();
   w = inner-r;
   relief = atan2(-w,top_offset - bottom_offset);
 
+  // 2sqrt(r2 - h2) = w
+  w_at_lip = 2*sqrt(inner*inner - r*r);
   intersection() {
     cylinder(r=outer,h=length);
-    translate([-width/2,r,0]) {
-      translate([0,0,bottom_offset]) rotate([relief,0,0]) cube([width, outer-r, top_offset-bottom_offset]);
-      cube([width, outer-r, bottom_offset]);
+    translate([-w_at_lip/2,r,0]) {
+      translate([0,0,bottom_offset]) 
+        rotate([relief,0,0]) 
+        cube([w_at_lip, outer-r, top_offset-bottom_offset]);
+      cube([w_at_lip, outer-r, bottom_offset]);
     }
   }
 }
 
-module fipple(inner, outer, length, width, angle) {
+module fipple(inner, outer, length, width, angle, height) {
   difference() {
     union() {
       segment(inner, outer, length);
-      chin(inner, outer, length, width, angle);
+      chin(inner, outer, length, width, angle, height);
       cheek(inner, outer, width);
     }
-    lip(inner, outer, width, angle);
+    lip(inner, outer, width, angle, height);
   }
 }
 
 inner = 8;
 outer = 10;
 length = 40;
-width = 3;
-angle = 45;
+width = 5;
+angle = 90-20;
+height = 2;
 
-fipple(inner, outer, length, width, angle);
+fipple(inner, outer, length, width, angle, height);
+// lip(inner, outer, width, angle, height);

@@ -1,23 +1,37 @@
-// $fn = $preview ? 20: 72;
+$fn = $preview ? 20: 100;
 use <fipple.scad>;
 use <mouthpiece.scad>;
 use <segment.scad>;
 
 /* [ pipe ] */
 inner_diameter = 8;
-outer_diameter = 10;
+outer_diameter = 11;
 length = 100;
 
 /* [ fipple ] */
-lip_width = 5;
-lip_angle = 90 - 20;
-window_size = 5;
+lip_width = 4;
+lip_angle = 15;
+window_size = 3;
 windway_height = 2;
-windway_length = 20;
+windway_length = 30;
+
+
+/* measured whistle params
+
+inner_diameter = 15.08;   // 19/32 = 15.08mm
+outer_diameter = 15.87;   // 5/8 = 15.87mm
+fipple_length = 71.46;    // 3 - 3/16
+windway_length = 25.4;
+window_size = 4.76;       // 3/16 = 4.76mm
+width = 7.14;             // 9/32 = 7.14mm
+angle = 20;
+*/
+
 
 module dummy(){}
 
 fipple_length = 40;
+angle = 90 - lip_angle;
 inner = inner_diameter / 2;
 outer = outer_diameter / 2;
 w = lip_width;
@@ -27,31 +41,18 @@ w_len = windway_length;
 f_len = fipple_length;
 p_len = length - f_len;
 
-/* measured whistle params
-
-inner_diameter = 15.08; // 19/32 = 15.08mm
-outer_diameter = 15.87;  // 5/8 = 15.87mm
-fipple_length = 71.46; // 3 - 3/16
-windway_length = 25.4;
-window_size = 4.76;  // 3/16 = 4.76mm
-width = 7.14;  // 9/32 = 7.14mm
-angle = 90-20;
-*/
-
-
-// todo
-// deepen windway/chin --- lip_radius is dependent on windway height
 c = coupler_height();
 
-translate([-outer-3,0,0]){
-  translate([0, 0, f_len + w_len + w_sz + 5*c + 3])
+  translate([0, 0, p_len + f_len + w_len + w_sz + 7*c + 4])
     last_segment(inner, outer, p_len);
 
+  translate([0, 0, f_len + w_len + w_sz + 5*c + 3])
+    segment(inner, outer, p_len);
+
   translate([0, 0, w_len + w_sz + 3*c  + 2])
-    fipple(inner, outer, f_len, w, lip_angle);
+    fipple(inner, outer, f_len, w, angle, w_h);
 
   translate([0, 0, w_len + c + 1])
-    window(inner, outer, w_sz, w);
+    window(inner, outer, w_sz, w, w_h);
 
-  mouthpiece(inner, outer, w_len, w);
-}
+  mouthpiece(inner, outer, w_len, w, w_h);

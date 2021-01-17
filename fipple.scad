@@ -32,7 +32,7 @@ module lip(inner, outer, width, angle) {
     [-w2,outer,0],
     [w2,outer,0],
     [-w2,outer,h],
-    [w2,outer,h]   
+    [w2,outer,h]
   ];
   faces = [
     [0,1,3,2],
@@ -51,7 +51,7 @@ module chin(inner, outer, length, width, angle) {
   top_offset = length - coupler_height();
   w = inner-r;
   relief = atan2(-w,top_offset - bottom_offset);
-  
+
   intersection() {
     cylinder(r=outer,h=length);
     translate([-width/2,r,0]) {
@@ -60,19 +60,18 @@ module chin(inner, outer, length, width, angle) {
     }
   }
 
-  // TODO so close, but doesn't line up with built-in
   cheek_angle = asin((width/2)/inner)/2;
-  cylinder_arc(inner,[90+cheek_angle,90+cheek_angle+30], outer-inner, coupler_height());
-  cylinder_arc(inner,[90-cheek_angle,90-cheek_angle-30], outer-inner, coupler_height());
+  arc(inner,outer,coupler_height(),90+cheek_angle,90+cheek_angle+30);
+  arc(inner,outer,coupler_height(),90-cheek_angle,90-cheek_angle-30);
 }
 
 inner = 8;
 outer = 10;
-length = 20;
-width = 3;
+length = 40;
+width = 5;
 angle = 45;
 
-// $fn=50;
+$fn=50;
 
 difference() {
   union() {

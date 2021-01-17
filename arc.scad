@@ -1,34 +1,16 @@
-radius = 20;
-angles = [45, 290];
-width = 2;
-fn = 24;
-
-module sector(radius, angles, fn = 24) {
-    r = radius / cos(180 / fn);
-    step = -360 / fn;
-
-    points = concat([[0, 0]],
-        [for(a = [angles[0] : step : angles[1] - 360]) 
-            [r * cos(a), r * sin(a)]
-        ],
-        [[r * cos(angles[1]), r * sin(angles[1])]]
-    );
-
-    difference() {
-        circle(radius, $fn = fn);
-        polygon(points);
-    }
+module sector(radius, height, start, end) {
+  rotate([0,0,start])
+  rotate_extrude(angle=end-start) {
+    square([radius,height]);
+  }
 }
 
-module arc(radius, angles, width = 1, fn = 24) {
-    difference() {
-        sector(radius + width, angles, fn);
-        sector(radius, angles, fn);
-    }
+module arc(inner, outer, height, start, end) {
+  difference(){
+    sector(outer,height,start,end);
+    sector(inner,height,0,360);
+  }
 }
 
-module cylinder_arc(radius, angles, width, length, fn = 24) {
-  linear_extrude(length) arc(radius, angles, width);
-}
+arc(8,10,5,30,60);
 
-cylinder_arc(radius, angles, width, 10);

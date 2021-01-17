@@ -1,7 +1,10 @@
 module sector(radius, height, start, end) {
-  rotate([0,0,start])
-  rotate_extrude(angle=end-start) {
-    square([radius,height]);
+  intersection() {
+    cylinder(r=radius, h=height);
+    rotate([0,0,start])
+    rotate_extrude(angle=end-start) {
+      square([radius,height]);
+    }
   }
 }
 

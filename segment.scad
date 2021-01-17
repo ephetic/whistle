@@ -29,4 +29,12 @@ module segment(inner, outer, length) {
   }
 }
 
+module end_segment(inner, outer, length) {
+  difference() {
+    pipe(inner, outer, length);
+    coupler(inner, outer, false);
+    // translate([0,0,length]) coupler(inner, outer, true);
+  }
+}
+
 segment(8,10,20);

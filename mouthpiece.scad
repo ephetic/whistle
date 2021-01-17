@@ -29,24 +29,3 @@ module window(inner, outer, size, width) {
     translate([0,0,length-coupler_height()]) cheek(inner, outer, width);
   }
 }
-
-// todo
-// deepen windway/chin --- lip_radius is dependent on windway height
-// re-parameterize accounting for couplers
-// create parameters file (can customizer globals get re-exported as fns?)
-
-inner = 15.08; // 19/32 = 15.08mm
-outer = 15.87;  // 5/8 = 15.87mm
-fipple_length = 71.46; // 3 - 3/16
-windway_length = 25.4;
-window_size = 4.76;  // 3/16 = 4.76mm
-width = 7.14;  // 9/32 = 7.14mm
-angle = 90-20;
-
-translate([0,0,windway_length+window_size+8])
-fipple(inner, outer, fipple_length, width, angle);
-
-translate([0,0,windway_length+2])
-window(inner, outer, window_size, width);
-
-mouthpiece(inner, outer, windway_length, width);

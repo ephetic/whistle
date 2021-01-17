@@ -44,7 +44,6 @@ module lip(inner, outer, width, angle) {
   polyhedron(points, faces);
 }
 
-// could collide with segment.collar
 module chin(inner, outer, length, width, angle) {
   r = lip_radius(inner, width);
   bottom_offset = max(coupler_height(), lip_height(inner, outer, width, angle));
@@ -65,26 +64,21 @@ module chin(inner, outer, length, width, angle) {
   arc(inner,outer,coupler_height(),90-cheek_angle,90-cheek_angle-30);
 }
 
+module fipple(inner, outer, length, width, angle) {
+  difference() {
+    union() {
+      segment(inner, outer, length);
+      chin(inner, outer, length, width, angle);
+    }
+    lip(inner, outer, width, angle);
+  }
+}
+
 inner = 8;
 outer = 10;
 length = 40;
 width = 5;
 angle = 45;
 
-$fn=50;
 
-difference() {
-  union() {
-    segment(inner, outer, length);
-    chin(inner, outer, length, width, angle);
-  }
-  lip(inner, outer, width, angle);
-}
-
-// chin(inner, outer, width, length);
-// lip(inner, outer, width, angle);
-
-
-// chin(inner, outer, length, width, angle);
-// translate([0,0,10]) lip(inner, outer, width, angle);
-
+fipple(inner, outer, length, width, angle);

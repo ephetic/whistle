@@ -8,13 +8,13 @@
       "type": "shell",
       "presentation": {
         "echo": true,
-        "reveal": "silent",
+        "reveal": "never",
         "focus": false,
-        "panel": "shared",
+        "panel": "dedicated",
         "showReuseMessage": false,
         "clear": false
       },
-      "command": "/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD ${file}",
+      "command": "/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD ${file} & ; exit",
       "problemMatcher": [],
       "group": {
         "kind": "build",

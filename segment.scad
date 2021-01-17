@@ -8,7 +8,7 @@ module pipe(inner, outer, length) {
 }
 
 // so other modules can see these values
-function coupler_height () = 5;
+function coupler_height () = 2;
 
 module coupler(inner, outer, top){
   h = coupler_height();

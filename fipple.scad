@@ -44,6 +44,12 @@ module lip(inner, outer, width, angle) {
   polyhedron(points, faces);
 }
 
+module cheek(inner, outer, width) {
+  angle = asin((width/2)/inner)/2;
+  delta = 30;
+  arc(inner, outer, coupler_height(), 90-angle-delta, 90+angle+delta);
+}
+
 module chin(inner, outer, length, width, angle) {
   r = lip_radius(inner, width);
   bottom_offset = max(coupler_height(), lip_height(inner, outer, width, angle));
@@ -58,10 +64,6 @@ module chin(inner, outer, length, width, angle) {
       cube([width, outer-r, bottom_offset]);
     }
   }
-
-  cheek_angle = asin((width/2)/inner)/2;
-  arc(inner,outer,coupler_height(),90+cheek_angle,90+cheek_angle+30);
-  arc(inner,outer,coupler_height(),90-cheek_angle,90-cheek_angle-30);
 }
 
 module fipple(inner, outer, length, width, angle) {
@@ -69,6 +71,7 @@ module fipple(inner, outer, length, width, angle) {
     union() {
       segment(inner, outer, length);
       chin(inner, outer, length, width, angle);
+      cheek(inner, outer, width);
     }
     lip(inner, outer, width, angle);
   }
@@ -77,8 +80,7 @@ module fipple(inner, outer, length, width, angle) {
 inner = 8;
 outer = 10;
 length = 40;
-width = 5;
+width = 3;
 angle = 45;
-
 
 fipple(inner, outer, length, width, angle);

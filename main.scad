@@ -1,4 +1,4 @@
-$fn = $preview ? 20: 100;
+// $fn = $preview ? 20: 100;
 use <fipple.scad>;
 use <mouthpiece.scad>;
 use <segment.scad>;
@@ -30,6 +30,8 @@ angle = 20;
 
 module dummy(){}
 
+// derived parameters
+
 fipple_length = 40;
 angle = 90 - lip_angle;
 inner = inner_diameter / 2;
@@ -41,18 +43,40 @@ w_len = windway_length;
 f_len = fipple_length;
 p_len = length - f_len;
 
-c = coupler_height();
+module last() {
+  last_segment(inner, outer, p_len);
+}
+
+module non_last() {
+  segment(inner, outer, p_len);
+}
+
+module fip() {
+  fipple(inner, outer, f_len, w, angle, w_h);
+}
+
+module win() {
+  window(inner, outer, w_sz, w, w_h);
+}
+
+module mouth() {
+  mouthpiece(inner, outer, w_len, w, w_h);
+}
+
+module test() {
+  c = coupler_height();
 
   translate([0, 0, p_len + f_len + w_len + w_sz + 7*c + 4])
-    last_segment(inner, outer, p_len);
+    last();
 
   translate([0, 0, f_len + w_len + w_sz + 5*c + 3])
-    segment(inner, outer, p_len);
+    non_last();
 
   translate([0, 0, w_len + w_sz + 3*c  + 2])
-    fipple(inner, outer, f_len, w, angle, w_h);
+    fip();
 
   translate([0, 0, w_len + c + 1])
-    window(inner, outer, w_sz, w, w_h);
+    win();
 
-  mouthpiece(inner, outer, w_len, w, w_h);
+  mouth();
+}

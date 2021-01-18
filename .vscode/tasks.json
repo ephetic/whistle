@@ -14,7 +14,7 @@
         "showReuseMessage": false,
         "clear": false
       },
-      "command": "/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD ${file} & ; exit",
+      "command": "/Applications/OpenSCAD.app/Contents/MacOS/OpenSCAD ${file}",
       "problemMatcher": [],
       "group": {
         "kind": "build",

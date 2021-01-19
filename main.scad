@@ -1,19 +1,20 @@
-// $fn = $preview ? 20: 100;
+use <coupler.scad>;
 use <fipple.scad>;
 use <mouthpiece.scad>;
 use <segment.scad>;
+use <window.scad>;
 
 /* [ pipe ] */
-inner_diameter = 8;
-outer_diameter = 11;
+inner_diameter = 12;
+outer_diameter = 15;
 length = 100;
 
 /* [ fipple ] */
-lip_width = 4;
+lip_width = 7;
 lip_angle = 15;
-window_size = 3;
-windway_height = 2;
-windway_length = 30;
+window_size = 4;
+windway_height = 1.4;
+windway_length = 40;
 
 
 /* measured whistle params
@@ -31,17 +32,19 @@ angle = 20;
 module dummy(){}
 
 // derived parameters
-
 fipple_length = 40;
 angle = 90 - lip_angle;
 inner = inner_diameter / 2;
-outer = outer_diameter / 2;
+wall_thickness = ceil((outer_diameter / 2-inner)/0.4)*0.4; // whole number of nozzles
+outer = inner + wall_thickness;
+
 w = lip_width;
 w_sz = window_size;
 w_h = windway_height;
 w_len = windway_length;
 f_len = fipple_length;
 p_len = length - f_len;
+b_h = bevel_height(inner, outer);
 
 module last() {
   last_segment(inner, outer, p_len);
@@ -66,17 +69,19 @@ module mouth() {
 module test() {
   c = coupler_height();
 
-  translate([0, 0, p_len + f_len + w_len + w_sz + 7*c + 4])
-    last();
+  // translate([0, 0, p_len + f_len + w_len + w_sz + 7*c + 4])
+  //   last();
 
-  translate([0, 0, f_len + w_len + w_sz + 5*c + 3])
-    non_last();
+  // translate([0, 0, f_len + w_len + w_sz + 5*c + 3])
+  //   non_last();
 
-  translate([0, 0, w_len + w_sz + 3*c  + 2])
+  translate([0, 0, w_len + w_sz + 3])
     fip();
 
-  translate([0, 0, w_len + c + 1])
+  color("#aaaaaa55") translate([0, 0, w_len - b_h ])
     win();
 
   mouth();
 }
+
+test();

@@ -1,14 +1,19 @@
 use <arc.scad>;
+use <coupler.scad>;
 use <fipple.scad>;
 use <segment.scad>;
 
-module mouthpiece(inner, outer, length, width, height) {
+module mouthpiece(inner, outer, length, width, height,gap=0.1) {
+  // bevel = (outer - inner) / 2 - gap;
+  bevel = bevel_height(inner, outer, gap);
+  excess = coupler_height() + bevel;
+  length = length - excess;
   difference() {
     union() {
       first_segment(inner, outer, length);
-      cylinder(r=inner, h=length);
+      cylinder(r=inner, h=length + excess);
     }
-    windway(inner, outer, length, width, height);
+    windway(inner, outer, length + excess, width, height);
   }
 }
 
@@ -44,14 +49,3 @@ module windway(inner, outer, length, width, height) {
     cube([height, width, length]);
 }
 
-module window(inner, outer, size, width, height) {
-  offset = inset(inner, width, height);
-  difference() {
-    segment(inner, outer, size);
-    rotate([0,0,90])
-      translate([offset-1, -width/2, coupler_height()])
-      cube([outer-offset+1, width, size]);
-    translate([0,0,size+coupler_height()]) 
-      cheek(inner, outer, width);
-  }
-}

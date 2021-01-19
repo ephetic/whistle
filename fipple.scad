@@ -1,4 +1,5 @@
 use <arc.scad>;
+use <coupler.scad>;
 use <mouthpiece.scad>;
 use <segment.scad>;
 
@@ -56,7 +57,12 @@ module chin(inner, outer, length, width, angle, height) {
 module fipple(inner, outer, length, width, angle, height) {
   difference() {
     union() {
-      segment(inner, outer, length);
+      difference() {
+        segment(inner, outer, length);
+        rotate([0,0,90])
+          translate([0, -width/2, -coupler_height()])
+          cube([outer, width, coupler_height()]);
+      }
       chin(inner, outer, length, width, angle, height);
       cheek(inner, outer, width);
     }
